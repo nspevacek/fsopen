@@ -1,6 +1,7 @@
 const config = require('../utils/config')
 const logger = require('../utils/logger')
 const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false)
 
 const url = config.MONGODB_URI
 

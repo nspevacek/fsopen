@@ -13,7 +13,6 @@ const favoriteBlog = (blogs) => {
     let favorite = {}
 
     if (!Array.isArray(blogs)) {
-        console.log('working')
         return {}
     }
 
