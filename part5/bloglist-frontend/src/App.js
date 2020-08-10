@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -52,29 +54,28 @@ const App = () => {
     window.location.reload()
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
+    return (
       <div>
-        username
-            <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
       </div>
-      <div>
-        password
-            <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
+    )
+  }
 
   const createBlog = (title, author, url) => {
     const blog = {
@@ -94,7 +95,7 @@ const App = () => {
           value={title}
           name="Title"
           onChange={({ target }) => setTitle(target.value)}
-          />
+        />
       </div>
       <div>
         author:
@@ -103,7 +104,7 @@ const App = () => {
           value={author}
           name="Author"
           onChange={({ target }) => setAuthor(target.value)}
-          />
+        />
       </div>
       <div>
         url:
@@ -112,7 +113,7 @@ const App = () => {
           value={url}
           name="Url"
           onChange={({ target }) => setUrl(target.value)}
-          />
+        />
       </div>
       <button type="submit">create</button>
     </form>
@@ -128,18 +129,18 @@ const App = () => {
   }
 
   return (
-      <div>
-        <h2>blogs</h2>
-        <p>
-          {user.name} logged in
+    <div>
+      <h2>blogs</h2>
+      <p>
+        {user.name} logged in
           <button onClick={handleLogout}>logout</button>
-        </p>
-        <h2>create new</h2>
-        {blogForm()}
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </div>
+      </p>
+      <h2>create new</h2>
+      {blogForm()}
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} />
+      )}
+    </div>
   )
 }
 
